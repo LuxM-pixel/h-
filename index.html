@@ -79,6 +79,7 @@ header{
 }
 .org-node .o-title{font-weight:700;font-size:14px;color:var(--primary-burgundy)}
 .org-node .o-name{font-size:12px;color:var(--text-light);margin-top:2px}
+.org-node .o-line{font-size:12px;color:var(--blue);margin-top:2px;direction:ltr;text-align:right;align-self:flex-end;word-break:break-all}
 
 /* الأطراف الثابتة */
 .parties-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
@@ -211,7 +212,7 @@ header{
 .modal-title .ico{color:var(--primary-burgundy)}
 .modal-title h3{color:var(--primary-burgundy);font-size:18px}
 .modal-content label{display:block;font-size:13px;margin-bottom:5px;color:var(--text-light)}
-.modal-content textarea,.modal-content select,.modal-content input[type=text],.modal-content input[type=tel]{
+.modal-content textarea,.modal-content select,.modal-content input[type=text],.modal-content input[type=tel],.modal-content input[type=email]{
   width:100%;padding:10px;border:1px solid var(--border-color);border-radius:6px;
   margin-bottom:14px;font-size:15px
 }
@@ -223,6 +224,7 @@ header{
 .save-btn{background:var(--primary-burgundy);color:#fff}
 .cancel-btn{background:#ddd;color:#333}
 .del-btn{background:#fff;color:#b33;border:1px solid #b33!important;margin-inline-end:auto}
+.ltr-input{direction:ltr;text-align:right}
 
 /* اختيار المكونات */
 .pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:46vh;overflow:auto;margin-bottom:12px}
@@ -342,6 +344,8 @@ header{
         <option value="done">مكتملة</option>
       </select>
       <span class="op-badge" id="op-badge">جديدة</span>
+      <span class="status-label" style="margin-inline-start:10px">النوع:</span>
+      <select id="op-type" onchange="changeOpType(this.value)" aria-label="نوع العملية"></select>
     </div>
     <div class="tools">
       <button class="tool-btn" onclick="copyReport()"><span data-ico="clipboard" data-size="16"></span>نسخ التقرير</button>
@@ -386,7 +390,7 @@ header{
     <textarea id="sum-text" class="tall"></textarea>
     <div class="hint">تغيير الاختيارات أعلاه يعيد كتابة الملخص، وتعديلك اليدوي ينمسح.</div>
 
-    <label for="sum-contact">إرسال واتساب إلى (اختياري)</label>
+    <label for="sum-contact">المرسَل إليه (اختياري)</label>
     <select id="sum-contact"></select>
 
     <div class="send-row">
@@ -407,8 +411,10 @@ header{
   <div class="modal-content wide" role="dialog" aria-modal="true">
     <div class="modal-title"><span class="ico" data-ico="plus" data-size="28"></span><h3 id="pick-title"></h3></div>
     <div id="pick-name-wrap">
-      <label for="pick-name">اسم العملية (اختياري)</label>
-      <input type="text" id="pick-name" maxlength="80" placeholder="مثال: بيع فيلا حي الياسمين">
+      <label for="pick-type">نوع العملية (اختياري)</label>
+      <select id="pick-type"></select>
+      <label for="pick-name">اسم العملية / موضوعها (اختياري)</label>
+      <input type="text" id="pick-name" maxlength="80" placeholder="مثال: حجز موعد معاينة فيلا الياسمين">
     </div>
     <label>اختاري المكونات اللي تحتاجينها</label>
     <div class="pick-grid" id="pick-grid"></div>
@@ -527,6 +533,12 @@ header{
     <input type="text" id="org-title" maxlength="60" placeholder="مثال: مدير المبيعات">
     <label for="org-name">اسم الشخص</label>
     <input type="text" id="org-name" maxlength="60" placeholder="اختياري">
+    <label for="org-phone">رقم الجوال</label>
+    <input type="tel" id="org-phone" class="ltr-input" maxlength="25" placeholder="05xxxxxxxx">
+    <label for="org-phone2">رقم الجوال الثاني</label>
+    <input type="tel" id="org-phone2" class="ltr-input" maxlength="25" placeholder="اختياري">
+    <label for="org-email">البريد الإلكتروني</label>
+    <input type="email" id="org-email" class="ltr-input" maxlength="80" placeholder="name@example.com">
     <label for="org-parent">يتبع لـ</label>
     <select id="org-parent"></select>
     <div class="modal-actions">
@@ -620,7 +632,7 @@ const LEGACY = {1:'parties',2:'environment',3:'method',4:'comms',5:'reports',6:'
 
 // المعلومات الإضافية اللي تقدرين تضيفينها للملخص
 const SUM_EXTRAS = [
-  {k:'head',     t:'بيانات العملية (الرقم والاسم والحالة)', def:true},
+  {k:'head',     t:'بيانات العملية (الرقم والنوع والاسم والحالة)', def:true},
   {k:'criteria', t:'المعايير',                               def:true},
   {k:'org',      t:'الهيكل التنظيمي',                        def:false},
   {k:'parties',  t:'الأطراف الثابتة',                        def:false}
@@ -628,6 +640,9 @@ const SUM_EXTRAS = [
 
 const BOX_STATUS = {new:'لم يبدأ', progress:'قيد التنفيذ', done:'مكتمل'};
 const OP_STATUS  = {new:'جديدة', progress:'قيد التنفيذ', review:'قيد المراجعة', done:'مكتملة'};
+// أنواع العمليات (عدّليها بحرية)
+const OP_TYPES = ['متابعة','إرسال','حجز موعد','فعالية','عقار','أخرى'];
+const NO_TYPE = '— غير محدد —';
 const DEFAULT_CRITERIA = [
   'اكتمال بيانات الأطراف المعنية',
   'مراجعة المخاطر والتشريعات',
@@ -661,6 +676,7 @@ function migrate(op){
   op.comps = sortComps(op.comps);
   if(!Array.isArray(op.props)) op.props = [];
   if(typeof op.name !== 'string') op.name = '';
+  if(typeof op.type !== 'string') op.type = '';
   if(!Array.isArray(op.criteria)) op.criteria = [];
   return op;
 }
@@ -671,7 +687,7 @@ function loadState(){
   }catch(e){}
   if(!state.ops || !state.ops.length){
     state = {currentId:null, ops:[]};
-    addOperation('', ['property','parties','contracts','financial']);
+    addOperation('', ['property','parties','contracts','financial'], '');
   }
   state.ops.forEach(migrate);
   if(!state.ops.find(o=>o.id===state.currentId)) state.currentId = state.ops[0].id;
@@ -690,10 +706,14 @@ function loadCompany(){
   if(!company.org.length){
     const root = uid();
     company.org = [
-      {id:root, title:'المدير العام', name:'', parent:''},
-      {id:uid(), title:'السكرتارية التنفيذية', name:'', parent:root}
+      {id:root, title:'المدير العام', name:'', phone:'', phone2:'', email:'', parent:''},
+      {id:uid(), title:'السكرتارية التنفيذية', name:'', phone:'', phone2:'', email:'', parent:root}
     ];
   }
+  // المناصب القديمة ما فيها حقول التواصل
+  company.org.forEach(n=>{
+    ['name','phone','phone2','email','parent'].forEach(f=>{ if(typeof n[f] !== 'string') n[f] = ''; });
+  });
 }
 function persistCompany(){
   try{ localStorage.setItem(COMPANY_KEY, JSON.stringify(company)); }catch(e){}
@@ -730,6 +750,10 @@ function renderOrg(){
         const nm = document.createElement('span'); nm.className = 'o-name'; nm.textContent = n.name;
         btn.appendChild(nm);
       }
+      [n.phone, n.phone2, n.email].filter(Boolean).forEach(v=>{
+        const l = document.createElement('span'); l.className = 'o-line'; l.textContent = v;
+        btn.appendChild(l);
+      });
       li.appendChild(btn);
       const kids = company.org.filter(k=>k.parent===n.id);
       if(kids.length) li.appendChild(build(kids));
@@ -745,6 +769,9 @@ function openOrgModal(id){
   document.getElementById('org-modal-title').textContent = node ? 'تعديل منصب' : 'إضافة منصب';
   document.getElementById('org-title').value = node ? node.title : '';
   document.getElementById('org-name').value = node ? node.name : '';
+  document.getElementById('org-phone').value = node ? node.phone : '';
+  document.getElementById('org-phone2').value = node ? node.phone2 : '';
+  document.getElementById('org-email').value = node ? node.email : '';
   document.getElementById('org-del').style.display = node ? '' : 'none';
 
   const blocked = node ? new Set([node.id, ...descendants(node.id)]) : new Set();
@@ -769,13 +796,19 @@ function closeOrgModal(){
 function saveOrg(){
   const title = document.getElementById('org-title').value.trim();
   const name = document.getElementById('org-name').value.trim();
+  const phone = document.getElementById('org-phone').value.trim();
+  const phone2 = document.getElementById('org-phone2').value.trim();
+  const email = document.getElementById('org-email').value.trim();
   const parent = document.getElementById('org-parent').value;
   if(!title){ alert('اكتبي المسمى الوظيفي'); return; }
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    alert('البريد الإلكتروني غير صحيح'); return;
+  }
   if(editingOrg){
     const n = company.org.find(x=>x.id===editingOrg);
-    n.title = title; n.name = name; n.parent = parent;
+    Object.assign(n,{title,name,phone,phone2,email,parent});
   }else{
-    company.org.push({id:uid(), title, name, parent});
+    company.org.push({id:uid(), title, name, phone, phone2, email, parent});
   }
   persistCompany(); renderOrg(); closeOrgModal();
 }
@@ -875,10 +908,11 @@ function genOpId(){
   while(state.ops.find(o=>o.id===id)) id = base + '-' + (i++);
   return id;
 }
-function addOperation(name, comps){
+function addOperation(name, comps, type){
   const op = {
     id: genOpId(),
     name: name || '',
+    type: type || '',
     start: Date.now(),
     status: 'new',
     comps: sortComps(comps),
@@ -903,6 +937,11 @@ function changeOpStatus(val){
   op.status = val;
   persist(); render();
 }
+function changeOpType(val){
+  const op = currentOp();
+  op.type = (val===NO_TYPE) ? '' : val;
+  persist(); render();
+}
 
 /* ---------- اختيار المكونات (عملية جديدة / إضافة مكوّن) ---------- */
 function createNewOperation(){ openPick('new'); }
@@ -916,6 +955,7 @@ function openPick(mode){
   document.getElementById('pick-name-wrap').style.display = mode==='add' ? 'none' : '';
   document.getElementById('pick-ok').textContent = mode==='add' ? 'إضافة' : 'إنشاء العملية';
   document.getElementById('pick-name').value = '';
+  fillSelect('pick-type', [NO_TYPE, ...OP_TYPES]);
 
   const grid = document.getElementById('pick-grid');
   grid.innerHTML = '';
@@ -940,7 +980,8 @@ function confirmPick(){
   const chosen = [...document.querySelectorAll('#pick-grid input:checked')].map(cb=>cb.value);
   if(!chosen.length){ alert('اختاري مكوّنًا واحدًا على الأقل'); return; }
   if(pickMode==='new'){
-    addOperation(document.getElementById('pick-name').value.trim(), chosen);
+    const type = document.getElementById('pick-type').value;
+    addOperation(document.getElementById('pick-name').value.trim(), chosen, type===NO_TYPE ? '' : type);
   }else{
     const op = currentOp();
     op.comps = sortComps([...op.comps, ...chosen]);
@@ -997,19 +1038,28 @@ function render(){
   state.ops.forEach(o=>{
     const opt = document.createElement('option');
     opt.value = o.id;
-    opt.textContent = o.id + (o.name ? ' | ' + o.name : '') + ' — ' + OP_STATUS[o.status];
+    opt.textContent = o.id + (o.type ? ' | ' + o.type : '') + (o.name ? ' | ' + o.name : '') + ' — ' + OP_STATUS[o.status];
     if(o.id===op.id) opt.selected = true;
     sel.appendChild(opt);
   });
 
   const nm = document.getElementById('op-name');
-  nm.style.display = op.name ? '' : 'none';
-  nm.textContent = op.name ? 'اسم العملية: ' + op.name : '';
+  const bits = [];
+  if(op.type) bits.push('النوع: ' + op.type);
+  if(op.name) bits.push('الاسم: ' + op.name);
+  nm.style.display = bits.length ? '' : 'none';
+  nm.textContent = bits.join(' | ');
 
   document.getElementById('op-status').value = op.status;
   const badge = document.getElementById('op-badge');
   badge.className = 'op-badge ' + op.status;
   badge.textContent = OP_STATUS[op.status];
+
+  // قائمة نوع العملية (إذا النوع المحفوظ مو في القائمة نضيفه عشان ما يضيع)
+  const typeList = [NO_TYPE, ...OP_TYPES];
+  if(op.type && !typeList.includes(op.type)) typeList.push(op.type);
+  fillSelect('op-type', typeList);
+  document.getElementById('op-type').value = op.type || NO_TYPE;
 
   // الأيقونات
   const grid = document.getElementById('grid');
@@ -1261,7 +1311,10 @@ function orgText(){
   const lines = [];
   function walk(pid, depth){
     company.org.filter(n=> pid===null ? (!n.parent || !ids.has(n.parent)) : n.parent===pid).forEach(n=>{
-      lines.push('  '.repeat(depth) + '• ' + n.title + (n.name ? ' — ' + n.name : ''));
+      const pad2 = '  '.repeat(depth);
+      lines.push(pad2 + '• ' + n.title + (n.name ? ' — ' + n.name : ''));
+      const contact = [n.phone, n.phone2, n.email].filter(Boolean);
+      if(contact.length) lines.push(pad2 + '  ' + contact.join(' | '));
       walk(n.id, depth+1);
     });
   }
@@ -1296,6 +1349,7 @@ function compText(op, k){
 function buildReport(){
   const op = currentOp();
   let r = `📋 تقرير العملية ${op.id}\n`;
+  if(op.type) r += `النوع: ${op.type}\n`;
   if(op.name) r += `الاسم: ${op.name}\n`;
   r += `الحالة: ${OP_STATUS[op.status]}\nبدأت: ${fmtDate(op.start)}\n━━━━━━━━━━\n`;
   r += `\n🏢 الهيكل التنظيمي:\n${orgText()}\n`;
@@ -1348,6 +1402,7 @@ function buildSummary(op, s){
   const parts = [];
   if(s.extras.head){
     let h = `📋 ملخص العملية ${op.id}`;
+    if(op.type) h += `\nالنوع: ${op.type}`;
     if(op.name) h += `\nالاسم: ${op.name}`;
     h += `\nالحالة: ${OP_STATUS[op.status]}`;
     h += `\nبدأت: ${fmtDate(op.start)}`;
@@ -1369,6 +1424,25 @@ function buildSummary(op, s){
     parts.push(compText(op,k));
   });
   return parts.join('\n\n━━━━━━━━━━\n\n');
+}
+
+// جهات الاتصال المتاحة للإرسال: المناصب ثم الأطراف الثابتة
+function contactList(){
+  const out = [];
+  company.org.forEach(n=>{
+    const phone = n.phone || n.phone2;
+    if(phone || n.email){
+      out.push({v:'o:'+n.id, label:n.title + (n.name ? ' — ' + n.name : '') + ' (منصب)', phone, email:n.email});
+    }
+  });
+  company.parties.filter(p=>p.phone).forEach(p=>{
+    out.push({v:'p:'+p.id, label:p.name + ' (' + p.type + ')', phone:p.phone, email:''});
+  });
+  return out;
+}
+function selectedContact(){
+  const v = document.getElementById('sum-contact').value;
+  return contactList().find(c=>c.v===v) || null;
 }
 
 function openSum(){
@@ -1404,11 +1478,11 @@ function openSum(){
   const sel = document.getElementById('sum-contact');
   sel.innerHTML = '';
   const o0 = document.createElement('option');
-  o0.value = ''; o0.textContent = '— أختار الشخص من واتساب —';
+  o0.value = ''; o0.textContent = '— أختار الشخص بنفسي من واتساب / البريد —';
   sel.appendChild(o0);
-  company.parties.filter(p=>p.phone).forEach(p=>{
+  contactList().forEach(c=>{
     const o = document.createElement('option');
-    o.value = p.id; o.textContent = p.name + ' (' + p.type + ')';
+    o.value = c.v; o.textContent = c.label;
     sel.appendChild(o);
   });
 
@@ -1448,18 +1522,20 @@ function normPhone(p){
 function sendSumWhatsApp(){
   const t = sumText(); if(!t) return;
   let url = 'https://wa.me/';
-  const id = document.getElementById('sum-contact').value;
-  if(id){
-    const p = company.parties.find(x=>x.id===id);
-    const ph = normPhone(p && p.phone);
+  const c = selectedContact();
+  if(c){
+    const ph = normPhone(c.phone);
     if(ph) url += ph;
+    else if(!confirm('هذا الشخص ما له رقم جوال. تبين تفتحين واتساب وتختارين المستلم بنفسك؟')) return;
   }
   window.open(url + '?text=' + encodeURIComponent(t),'_blank');
 }
 function sendSumMail(){
   const t = sumText(); if(!t) return;
   const op = currentOp();
-  window.location.href = 'mailto:?subject=' + encodeURIComponent('ملخص العملية ' + op.id) +
+  const c = selectedContact();
+  const to = c && c.email ? c.email : '';
+  window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent('ملخص العملية ' + op.id) +
     '&body=' + encodeURIComponent(t);
 }
 function copySum(){
