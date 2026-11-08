@@ -58,6 +58,8 @@ header{
   display:inline-flex;align-items:center;gap:6px
 }
 .tool-btn:hover{background:var(--primary-burgundy);color:#fff}
+.tool-btn.wa{background:var(--green);border-color:var(--green);color:#fff}
+.tool-btn.wa:hover{background:#256b3e}
 .empty{font-size:13px;color:var(--text-light);padding:8px 0}
 
 /* الشجرة */
@@ -109,6 +111,7 @@ header{
   width:100%;margin:4px 0 8px;padding:7px;border-radius:6px;border:none;
   background:#fff;color:var(--primary-burgundy);font-weight:600
 }
+#op-name{color:#fff;font-weight:700;font-size:14px}
 #countdown{color:var(--accent-gold);font-weight:bold;display:flex;align-items:center;gap:6px}
 #countdown.expired{color:#ff9a9a}
 .new-op-btn{
@@ -154,6 +157,9 @@ header{
 }
 .tile.progress{border-color:var(--orange);color:var(--orange)}
 .tile.done{border-color:var(--green);background:#F1F8F3;color:var(--green)}
+.tile.send-tile{border-color:var(--accent-gold);background:#FBF6EA;color:var(--primary-burgundy)}
+.tile.add-tile{border-style:dashed;background:#fff;color:var(--text-light)}
+.tile.add-tile:hover{color:var(--primary-burgundy)}
 .tile .dot{
   position:absolute;top:7px;left:7px;width:11px;height:11px;border-radius:50%;
   background:#c9c9c9;border:2px solid #fff
@@ -200,6 +206,7 @@ header{
   background:#fff;padding:22px;border-radius:12px;width:100%;max-width:520px;max-height:92vh;overflow:auto;
   box-shadow:0 5px 20px rgba(0,0,0,.2);border-top:5px solid var(--primary-burgundy)
 }
+.modal-content.wide{max-width:600px}
 .modal-title{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .modal-title .ico{color:var(--primary-burgundy)}
 .modal-title h3{color:var(--primary-burgundy);font-size:18px}
@@ -210,16 +217,57 @@ header{
 }
 .modal-content textarea{height:140px;resize:vertical}
 .modal-content textarea.short{height:80px}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px}
+.modal-content textarea.tall{height:230px;font-size:14px;line-height:1.7}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
 .modal-actions button{padding:8px 16px;border-radius:5px;cursor:pointer;font-weight:bold;border:none}
 .save-btn{background:var(--primary-burgundy);color:#fff}
 .cancel-btn{background:#ddd;color:#333}
 .del-btn{background:#fff;color:#b33;border:1px solid #b33!important;margin-inline-end:auto}
 
+/* اختيار المكونات */
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:46vh;overflow:auto;margin-bottom:12px}
+.modal-content label.pick-item{
+  display:flex;align-items:center;gap:8px;padding:9px;margin:0;border:1px solid var(--border-color);
+  border-radius:8px;cursor:pointer;font-size:13px;color:var(--primary-burgundy);font-weight:600
+}
+.pick-item input{accent-color:var(--primary-burgundy);width:16px;height:16px;flex-shrink:0}
+.pick-item:has(input:checked){border-color:var(--accent-gold);background:#FBF6EA}
+.pick-links{display:flex;gap:14px;margin-bottom:14px}
+.link-btn{background:none;border:none;color:var(--blue);cursor:pointer;font-size:13px;text-decoration:underline}
+
+/* نافذة الملخص */
+#sum-comps{max-height:30vh}
+.send-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.send-row .tool-btn{padding:9px 14px;font-size:14px}
+
+/* نافذة العقار */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{
+  background:var(--bg-cream);border:1px solid var(--border-color);color:var(--primary-burgundy);
+  padding:6px 12px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600
+}
+.chip.active{background:var(--primary-burgundy);color:#fff;border-color:var(--primary-burgundy)}
+.chip.new-chip{border-style:dashed;background:#fff}
+.chip.new-chip.active{background:var(--primary-burgundy)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.form-sep{font-size:13px;font-weight:700;color:var(--primary-burgundy);margin:2px 0 10px;padding-top:10px;border-top:1px solid var(--border-color)}
+.modal-content label.chk{
+  display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border-color);
+  padding:5px 11px;border-radius:20px;margin:0 0 6px 6px;cursor:pointer;font-size:13px;color:var(--text-main)
+}
+.chk input{accent-color:var(--primary-burgundy)}
+.chk:has(input:checked){border-color:var(--accent-gold);background:#FBF6EA}
+.parties-pick{margin-bottom:10px}
+.hint{font-size:12px;color:var(--text-light);margin-bottom:10px}
+.save-msg{font-size:12px;color:var(--green);font-weight:700;margin-inline-end:auto;align-self:center}
+.hide-comp{margin-top:14px;text-align:center}
+
 @media(max-width:600px){
   .tile .tip{display:none}
   .tree ul ul{padding-right:18px;margin-right:8px}
   .tree ul ul>li::before{right:-18px;width:16px}
+  .form-grid{grid-template-columns:1fr}
+  .pick-grid{grid-template-columns:1fr}
 }
 
 /* الطباعة */
@@ -227,7 +275,7 @@ header{
   body{background:#fff;padding:0}
   .new-op-btn,.tools,.crit-add,.crit-del,.header-meta select,.status-bar select,.panel-tools{display:none!important}
   header,.op-bar{background:#fff;color:#000;box-shadow:none;border:1px solid #ccc}
-  .header-title p,#countdown{color:#000}
+  .header-title p,#countdown,#op-name{color:#000}
   .icons-grid{display:none}
   .panel{break-inside:avoid}
 }
@@ -277,6 +325,7 @@ header{
     <div class="header-meta">
       <div><strong>العملية:</strong></div>
       <select id="op-select" onchange="switchOperation(this.value)" aria-label="اختيار العملية"></select>
+      <div id="op-name" style="display:none"></div>
       <div id="current-datetime">--</div>
       <div id="countdown">--</div>
     </div>
@@ -318,7 +367,63 @@ header{
   </div>
 </div>
 
-<!-- نافذة مكوّن العملية -->
+<!-- نافذة إرسال الملخص -->
+<div class="modal" id="sumModal" onclick="if(event.target===this)closeSum()">
+  <div class="modal-content wide" role="dialog" aria-modal="true">
+    <div class="modal-title"><span class="ico" data-ico="send" data-size="30"></span><h3>إرسال الملخص</h3></div>
+
+    <label>اختاري المكونات اللي تنكتب في الملخص</label>
+    <div class="pick-grid" id="sum-comps"></div>
+    <div class="pick-links">
+      <button class="link-btn" onclick="sumAll(true)">تحديد كل المكونات</button>
+      <button class="link-btn" onclick="sumAll(false)">مسح التحديد</button>
+    </div>
+
+    <label>معلومات إضافية</label>
+    <div id="sum-extras" style="margin-bottom:10px"></div>
+
+    <label for="sum-text">الملخص (تقدرين تعدلينه قبل الإرسال)</label>
+    <textarea id="sum-text" class="tall"></textarea>
+    <div class="hint">تغيير الاختيارات أعلاه يعيد كتابة الملخص، وتعديلك اليدوي ينمسح.</div>
+
+    <label for="sum-contact">إرسال واتساب إلى (اختياري)</label>
+    <select id="sum-contact"></select>
+
+    <div class="send-row">
+      <button class="tool-btn wa" onclick="sendSumWhatsApp()"><span data-ico="message" data-size="16"></span>إرسال واتساب</button>
+      <button class="tool-btn" onclick="sendSumMail()"><span data-ico="mail" data-size="16"></span>بريد</button>
+      <button class="tool-btn" onclick="copySum()"><span data-ico="clipboard" data-size="16"></span>نسخ</button>
+      <button class="tool-btn" id="sum-share" onclick="shareSum()"><span data-ico="send" data-size="16"></span>مشاركة</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeSum()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة اختيار المكونات (عملية جديدة / إضافة مكوّن) -->
+<div class="modal" id="pickModal" onclick="if(event.target===this)closePick()">
+  <div class="modal-content wide" role="dialog" aria-modal="true">
+    <div class="modal-title"><span class="ico" data-ico="plus" data-size="28"></span><h3 id="pick-title"></h3></div>
+    <div id="pick-name-wrap">
+      <label for="pick-name">اسم العملية (اختياري)</label>
+      <input type="text" id="pick-name" maxlength="80" placeholder="مثال: بيع فيلا حي الياسمين">
+    </div>
+    <label>اختاري المكونات اللي تحتاجينها</label>
+    <div class="pick-grid" id="pick-grid"></div>
+    <div class="pick-links">
+      <button class="link-btn" onclick="pickAll(true)">تحديد الكل</button>
+      <button class="link-btn" onclick="pickAll(false)">مسح التحديد</button>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closePick()">إلغاء</button>
+      <button class="save-btn" id="pick-ok" onclick="confirmPick()">إنشاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة مكوّن عام -->
 <div class="modal" id="inputModal" onclick="if(event.target===this)closeModal()">
   <div class="modal-content" role="dialog" aria-modal="true">
     <div class="modal-title">
@@ -334,8 +439,82 @@ header{
     <label for="modal-textarea">التفاصيل</label>
     <textarea id="modal-textarea" placeholder="اكتبي التفاصيل هنا..."></textarea>
     <div class="modal-actions">
+      <button class="del-btn" onclick="hideCurrent()">إخفاء من العملية</button>
       <button class="cancel-btn" onclick="closeModal()">إلغاء</button>
       <button class="save-btn" onclick="saveData()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة بيانات العقار -->
+<div class="modal" id="propModal" onclick="if(event.target===this)closePropModal()">
+  <div class="modal-content wide" role="dialog" aria-modal="true">
+    <div class="modal-title"><span class="ico" data-ico="home" data-size="30"></span><h3>بيانات العقار</h3></div>
+
+    <label for="prop-status">حالة المكوّن</label>
+    <select id="prop-status" onchange="changePropStatus(this.value)">
+      <option value="new">لم يبدأ</option>
+      <option value="progress">قيد التنفيذ</option>
+      <option value="done">مكتمل</option>
+    </select>
+
+    <div class="chips" id="prop-list"></div>
+
+    <div class="form-grid">
+      <div>
+        <label for="pf-number">رقم العقار</label>
+        <input type="text" id="pf-number" maxlength="40">
+      </div>
+      <div>
+        <label for="pf-type">نوع العقار</label>
+        <select id="pf-type"></select>
+      </div>
+      <div>
+        <label for="pf-purpose">الغرض</label>
+        <select id="pf-purpose"></select>
+      </div>
+      <div>
+        <label for="pf-deed">رقم الصك</label>
+        <input type="text" id="pf-deed" maxlength="40">
+      </div>
+      <div>
+        <label for="pf-city">الموقع (المدينة / الحي)</label>
+        <input type="text" id="pf-city" maxlength="80">
+      </div>
+      <div>
+        <label for="pf-area">المساحة (م²)</label>
+        <input type="text" id="pf-area" inputmode="decimal" maxlength="20">
+      </div>
+    </div>
+
+    <div class="form-sep">العقد</div>
+    <div class="form-grid">
+      <div>
+        <label for="pf-cno">رقم العقد</label>
+        <input type="text" id="pf-cno" maxlength="40">
+      </div>
+      <div>
+        <label for="pf-ctype">نوع العقد</label>
+        <select id="pf-ctype"></select>
+      </div>
+    </div>
+
+    <div class="form-sep">أطراف العقار</div>
+    <div class="parties-pick" id="pf-parties"></div>
+    <label for="pf-other">أطراف أخرى (غير ثابتة)</label>
+    <input type="text" id="pf-other" maxlength="120" placeholder="اختياري">
+
+    <label for="pf-notes">ملاحظات</label>
+    <textarea id="pf-notes" class="short" maxlength="300" placeholder="اختياري"></textarea>
+
+    <div class="modal-actions">
+      <button class="del-btn" id="pf-del" onclick="deleteProp()">حذف العقار</button>
+      <span class="save-msg" id="pf-msg"></span>
+      <button class="cancel-btn" onclick="closePropModal()">إغلاق</button>
+      <button class="save-btn" onclick="saveProp()">حفظ العقار</button>
+    </div>
+    <div class="hide-comp">
+      <button class="link-btn" onclick="hideCurrent()">إخفاء مكوّن بيانات العقار من هذه العملية</button>
     </div>
   </div>
 </div>
@@ -396,7 +575,15 @@ const ICONS = {
   'message':      '<path d="M4 5h16v11H9l-5 4z"/>',
   'printer':      '<path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><rect x="7" y="14" width="10" height="7"/>',
   'clock':        '<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',
-  'alert':        '<path d="M12 3l10 18H2z"/><path d="M12 10v5"/><path d="M12 18v.5"/>'
+  'alert':        '<path d="M12 3l10 18H2z"/><path d="M12 10v5"/><path d="M12 18v.5"/>',
+  'home':         '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  'coins':        '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  'file-text':    '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6"/><path d="M9 16h6"/>',
+  'scale':        '<path d="M12 4v16"/><path d="M7 20h10"/><path d="M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0z"/>',
+  'megaphone':    '<path d="M3 10v4h4l8 5V5L7 10z"/><path d="M18 9a4 4 0 0 1 0 6"/>',
+  'plus':         '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  'send':         '<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
+  'mail':         '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
 };
 function ico(name, size){
   size = size || 20;
@@ -410,17 +597,35 @@ function hydrateIcons(){
 
 /* ---------- البيانات الثابتة ---------- */
 // i = اسم الرسمة، e = إيموجي يُستخدم فقط في نص التقرير
-const BOXES = [
-  {i:'users',        e:'👥', t:'الأطراف المعنية'},
-  {i:'globe',        e:'🌍', t:'عناصر البيئة الداخلية والخارجية'},
-  {i:'compass',      e:'🧭', t:'منهجية العملية'},
-  {i:'phone',        e:'📞', t:'الاتصال والتواصل'},
-  {i:'chart',        e:'📊', t:'التقارير الإدارية'},
-  {i:'trend',        e:'📈', t:'التطور والتحسين'},
-  {i:'calendar',     e:'📅', t:'جدولة الأحداث والمواعيد'},
-  {i:'archive',      e:'🗂️', t:'الأرشفة والحفظ'},
-  {i:'check-circle', e:'✅', t:'السجل والتدقيق النهائي'}
+const COMPONENTS = [
+  {k:'property',    i:'home',         e:'🏠', t:'بيانات العقار'},
+  {k:'parties',     i:'users',        e:'👥', t:'الأطراف المعنية'},
+  {k:'contracts',   i:'file-text',    e:'📄', t:'العقود'},
+  {k:'financial',   i:'coins',        e:'💰', t:'الجانب المالي'},
+  {k:'legal',       i:'scale',        e:'⚖️', t:'الجانب القانوني والامتثال'},
+  {k:'schedule',    i:'calendar',     e:'📅', t:'جدولة الأحداث والمواعيد والزيارات'},
+  {k:'marketing',   i:'megaphone',    e:'📣', t:'التسويق والإعلان'},
+  {k:'environment', i:'globe',        e:'🌍', t:'عناصر البيئة الداخلية والخارجية'},
+  {k:'method',      i:'compass',      e:'🧭', t:'منهجية العملية'},
+  {k:'comms',       i:'phone',        e:'📞', t:'الاتصال والتواصل'},
+  {k:'reports',     i:'chart',        e:'📊', t:'التقارير الإدارية'},
+  {k:'improvement', i:'trend',        e:'📈', t:'التطور والتحسين'},
+  {k:'archive',     i:'archive',      e:'🗂️', t:'الأرشفة والحفظ'},
+  {k:'audit',       i:'check-circle', e:'✅', t:'السجل والتدقيق النهائي'}
 ];
+const CMAP = {};
+COMPONENTS.forEach(c=>CMAP[c.k]=c);
+// ترحيل العمليات القديمة (كانت المكونات مرقمة 1-9)
+const LEGACY = {1:'parties',2:'environment',3:'method',4:'comms',5:'reports',6:'improvement',7:'schedule',8:'archive',9:'audit'};
+
+// المعلومات الإضافية اللي تقدرين تضيفينها للملخص
+const SUM_EXTRAS = [
+  {k:'head',     t:'بيانات العملية (الرقم والاسم والحالة)', def:true},
+  {k:'criteria', t:'المعايير',                               def:true},
+  {k:'org',      t:'الهيكل التنظيمي',                        def:false},
+  {k:'parties',  t:'الأطراف الثابتة',                        def:false}
+];
+
 const BOX_STATUS = {new:'لم يبدأ', progress:'قيد التنفيذ', done:'مكتمل'};
 const OP_STATUS  = {new:'جديدة', progress:'قيد التنفيذ', review:'قيد المراجعة', done:'مكتملة'};
 const DEFAULT_CRITERIA = [
@@ -430,18 +635,35 @@ const DEFAULT_CRITERIA = [
   'أرشفة الوثائق والعقود'
 ];
 const PARTY_TYPES = ['مالك','عميل','مطوّر / مقاول','جهة حكومية','بنك / ممول','مكتب هندسي','شركة تسويق','أخرى'];
+const PROP_TYPES = ['شقة','فيلا','دور','عمارة','أرض','محل تجاري','مكتب','مستودع','استراحة / مزرعة','أخرى'];
+const PROP_PURPOSES = ['بيع','شراء','إيجار','إدارة أملاك','تسويق','تطوير','أخرى'];
+const CONTRACT_TYPES = ['— لا يوجد —','عقد بيع','عقد إيجار','عقد وساطة','عقد إدارة أملاك','عقد تسويق','عقد مقاولة','أخرى'];
 
 const STORE_KEY   = 'homran_ops_v2';
 const COMPANY_KEY = 'homran_company_v1';
 const DAY_MS = 24*60*60*1000;
 const pad = n => String(n).padStart(2,'0');
 const uid = () => 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const sortComps = arr => COMPONENTS.map(c=>c.k).filter(k=>arr.includes(k));
 
 let state = {currentId:null, ops:[]};
 let company = {org:[], parties:[]};
-let editingBox = null, editingOrg = null, editingParty = null;
+let editingBox = null, editingOrg = null, editingParty = null, editingProp = null;
+let pickMode = 'new';
 
 /* ---------- التخزين ---------- */
+function migrate(op){
+  if(!op.boxes) op.boxes = {};
+  Object.keys(LEGACY).forEach(n=>{
+    if(op.boxes[n]){ op.boxes[LEGACY[n]] = op.boxes[n]; delete op.boxes[n]; }
+  });
+  if(!Array.isArray(op.comps)) op.comps = Object.values(LEGACY);
+  op.comps = sortComps(op.comps);
+  if(!Array.isArray(op.props)) op.props = [];
+  if(typeof op.name !== 'string') op.name = '';
+  if(!Array.isArray(op.criteria)) op.criteria = [];
+  return op;
+}
 function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
@@ -449,9 +671,11 @@ function loadState(){
   }catch(e){}
   if(!state.ops || !state.ops.length){
     state = {currentId:null, ops:[]};
-    addOperation();
+    addOperation('', ['property','parties','contracts','financial']);
   }
+  state.ops.forEach(migrate);
   if(!state.ops.find(o=>o.id===state.currentId)) state.currentId = state.ops[0].id;
+  persist();
 }
 function persist(){
   try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
@@ -601,12 +825,8 @@ function openPartyModal(id){
   editingParty = id || null;
   const p = id ? company.parties.find(x=>x.id===id) : null;
   document.getElementById('party-modal-title').textContent = p ? 'تعديل طرف' : 'إضافة طرف';
-  const sel = document.getElementById('party-type');
-  sel.innerHTML = '';
-  PARTY_TYPES.forEach(t=>{
-    const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o);
-  });
-  sel.value = p ? p.type : PARTY_TYPES[0];
+  fillSelect('party-type', PARTY_TYPES);
+  document.getElementById('party-type').value = p ? p.type : PARTY_TYPES[0];
   document.getElementById('party-name').value = p ? p.name : '';
   document.getElementById('party-phone').value = p ? p.phone : '';
   document.getElementById('party-note').value = p ? p.note : '';
@@ -639,6 +859,13 @@ function deleteParty(){
   company.parties = company.parties.filter(x=>x.id!==p.id);
   persistCompany(); renderParties(); closePartyModal();
 }
+function fillSelect(id, arr){
+  const sel = document.getElementById(id);
+  sel.innerHTML = '';
+  arr.forEach(t=>{
+    const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o);
+  });
+}
 
 /* ---------- العمليات ---------- */
 function genOpId(){
@@ -648,25 +875,22 @@ function genOpId(){
   while(state.ops.find(o=>o.id===id)) id = base + '-' + (i++);
   return id;
 }
-function addOperation(){
+function addOperation(name, comps){
   const op = {
     id: genOpId(),
+    name: name || '',
     start: Date.now(),
     status: 'new',
+    comps: sortComps(comps),
     boxes: {},
+    props: [],
     criteria: DEFAULT_CRITERIA.map(t=>({text:t, checked:false}))
   };
   state.ops.unshift(op);
   state.currentId = op.id;
 }
 function currentOp(){ return state.ops.find(o=>o.id===state.currentId); }
-
-function createNewOperation(){
-  if(!confirm('بدء عملية جديدة؟ العملية الحالية تنحفظ في الأرشيف وتقدرين ترجعين لها.')) return;
-  addOperation(); persist(); render();
-}
 function switchOperation(id){ state.currentId = id; persist(); render(); }
-
 function unmetCount(op){ return op.criteria.filter(c=>!c.checked).length; }
 
 function changeOpStatus(val){
@@ -678,6 +902,63 @@ function changeOpStatus(val){
   }
   op.status = val;
   persist(); render();
+}
+
+/* ---------- اختيار المكونات (عملية جديدة / إضافة مكوّن) ---------- */
+function createNewOperation(){ openPick('new'); }
+function openAddComponent(){ openPick('add'); }
+
+function openPick(mode){
+  pickMode = mode;
+  const op = currentOp();
+  const list = mode==='add' ? COMPONENTS.filter(c=>!op.comps.includes(c.k)) : COMPONENTS;
+  document.getElementById('pick-title').textContent = mode==='add' ? 'إضافة مكوّن للعملية' : 'عملية جديدة (24 ساعة)';
+  document.getElementById('pick-name-wrap').style.display = mode==='add' ? 'none' : '';
+  document.getElementById('pick-ok').textContent = mode==='add' ? 'إضافة' : 'إنشاء العملية';
+  document.getElementById('pick-name').value = '';
+
+  const grid = document.getElementById('pick-grid');
+  grid.innerHTML = '';
+  list.forEach(c=>{
+    const lab = document.createElement('label');
+    lab.className = 'pick-item';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.value = c.k;
+    const ic = document.createElement('span'); ic.innerHTML = ico(c.i,20);
+    const tx = document.createElement('span'); tx.textContent = c.t;
+    lab.append(cb,ic,tx);
+    grid.appendChild(lab);
+  });
+  document.getElementById('pickModal').classList.add('open');
+  if(mode==='new') setTimeout(()=>document.getElementById('pick-name').focus(),50);
+}
+function closePick(){ document.getElementById('pickModal').classList.remove('open'); }
+function pickAll(v){
+  document.querySelectorAll('#pick-grid input').forEach(cb=>cb.checked = v);
+}
+function confirmPick(){
+  const chosen = [...document.querySelectorAll('#pick-grid input:checked')].map(cb=>cb.value);
+  if(!chosen.length){ alert('اختاري مكوّنًا واحدًا على الأقل'); return; }
+  if(pickMode==='new'){
+    addOperation(document.getElementById('pick-name').value.trim(), chosen);
+  }else{
+    const op = currentOp();
+    op.comps = sortComps([...op.comps, ...chosen]);
+  }
+  persist(); render(); closePick();
+}
+
+/* ---------- إخفاء مكوّن ---------- */
+function hideCurrent(){
+  const k = editingBox || (document.getElementById('propModal').classList.contains('open') ? 'property' : null);
+  if(!k) return;
+  const op = currentOp();
+  if(!confirm('إخفاء «' + CMAP[k].t + '» من هذه العملية؟ بياناته داخل العملية ستنحذف.')) return;
+  delete op.boxes[k];
+  if(k==='property') op.props = [];
+  op.comps = op.comps.filter(x=>x!==k);
+  persist(); render();
+  closeModal(); closePropModal();
 }
 
 /* ---------- المعايير ---------- */
@@ -716,43 +997,71 @@ function render(){
   state.ops.forEach(o=>{
     const opt = document.createElement('option');
     opt.value = o.id;
-    opt.textContent = o.id + ' — ' + OP_STATUS[o.status];
+    opt.textContent = o.id + (o.name ? ' | ' + o.name : '') + ' — ' + OP_STATUS[o.status];
     if(o.id===op.id) opt.selected = true;
     sel.appendChild(opt);
   });
+
+  const nm = document.getElementById('op-name');
+  nm.style.display = op.name ? '' : 'none';
+  nm.textContent = op.name ? 'اسم العملية: ' + op.name : '';
 
   document.getElementById('op-status').value = op.status;
   const badge = document.getElementById('op-badge');
   badge.className = 'op-badge ' + op.status;
   badge.textContent = OP_STATUS[op.status];
 
+  // الأيقونات
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
-  BOXES.forEach((b,idx)=>{
-    const n = idx+1;
-    const d = op.boxes[n] || {text:'',status:'new'};
+  op.comps.forEach(k=>{
+    const c = CMAP[k];
+    const d = op.boxes[k] || {text:'',status:'new'};
     const tile = document.createElement('button');
     tile.className = 'tile ' + (d.status!=='new' ? d.status : '');
-    tile.setAttribute('aria-label', b.t);
-    tile.onclick = ()=>openModal(n);
+    tile.setAttribute('aria-label', c.t);
+    tile.onclick = ()=>openModal(k);
 
     const iconWrap = document.createElement('span');
-    iconWrap.innerHTML = ico(b.i, 34);
+    iconWrap.innerHTML = ico(c.i, 34);
     tile.appendChild(iconWrap);
 
     const dot = document.createElement('span'); dot.className = 'dot';
     tile.appendChild(dot);
-    if(d.text){
-      const note = document.createElement('span');
-      note.className = 'has-note';
+
+    const hasData = k==='property' ? op.props.length>0 : !!d.text;
+    if(hasData){
+      const note = document.createElement('span'); note.className = 'has-note';
       tile.appendChild(note);
     }
     const tip = document.createElement('span');
-    tip.className = 'tip'; tip.textContent = b.t;
+    tip.className = 'tip'; tip.textContent = c.t;
     tile.appendChild(tip);
     grid.appendChild(tile);
   });
 
+  // أيقونة إرسال الملخص (ثابتة في كل عملية)
+  const send = document.createElement('button');
+  send.className = 'tile send-tile';
+  send.setAttribute('aria-label','إرسال الملخص');
+  send.onclick = openSum;
+  const sw = document.createElement('span'); sw.innerHTML = ico('send',34);
+  const stip = document.createElement('span'); stip.className = 'tip'; stip.textContent = 'إرسال الملخص';
+  send.append(sw,stip);
+  grid.appendChild(send);
+
+  if(op.comps.length < COMPONENTS.length){
+    const add = document.createElement('button');
+    add.className = 'tile add-tile';
+    add.setAttribute('aria-label','إضافة مكوّن');
+    add.onclick = openAddComponent;
+    const w = document.createElement('span'); w.innerHTML = ico('plus',30);
+    const tip = document.createElement('span'); tip.className = 'tip'; tip.textContent = 'إضافة مكوّن';
+    add.append(w,tip);
+    grid.appendChild(add);
+  }
+
+  // المعايير
   const list = document.getElementById('crit-list');
   list.innerHTML = '';
   if(!op.criteria.length){
@@ -798,12 +1107,13 @@ function tick(){
 }
 setInterval(tick,1000);
 
-/* ---------- نافذة مكوّن العملية ---------- */
-function openModal(n){
-  editingBox = n;
-  const d = currentOp().boxes[n] || {text:'',status:'new'};
-  document.getElementById('modal-ico').innerHTML = ico(BOXES[n-1].i, 30);
-  document.getElementById('modal-title').textContent = `${n}. ${BOXES[n-1].t}`;
+/* ---------- نافذة المكوّن العام ---------- */
+function openModal(k){
+  if(k==='property'){ openPropModal(); return; }
+  editingBox = k;
+  const d = currentOp().boxes[k] || {text:'',status:'new'};
+  document.getElementById('modal-ico').innerHTML = ico(CMAP[k].i, 30);
+  document.getElementById('modal-title').textContent = CMAP[k].t;
   document.getElementById('modal-textarea').value = d.text;
   document.getElementById('modal-status').value = d.status;
   document.getElementById('inputModal').classList.add('open');
@@ -824,11 +1134,128 @@ function saveData(){
   }
   closeModal();
 }
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeModal(); closeOrgModal(); closePartyModal(); }
-});
 
-/* ---------- التقرير والمشاركة ---------- */
+/* ---------- نافذة بيانات العقار ---------- */
+function openPropModal(){
+  const op = currentOp();
+  const b = op.boxes.property;
+  document.getElementById('prop-status').value = b ? b.status : (op.props.length ? 'progress' : 'new');
+  fillSelect('pf-type', PROP_TYPES);
+  fillSelect('pf-purpose', PROP_PURPOSES);
+  fillSelect('pf-ctype', CONTRACT_TYPES);
+  document.getElementById('propModal').classList.add('open');
+  renderPropList();
+  loadPropForm(op.props.length ? op.props[0].id : null);
+}
+function closePropModal(){
+  document.getElementById('propModal').classList.remove('open');
+  editingProp = null;
+}
+function renderPropList(){
+  const op = currentOp();
+  const box = document.getElementById('prop-list');
+  box.innerHTML = '';
+  op.props.forEach((p,i)=>{
+    const c = document.createElement('button');
+    c.className = 'chip' + (p.id===editingProp ? ' active' : '');
+    c.textContent = p.number ? 'عقار ' + p.number : (p.type || 'عقار ' + (i+1));
+    c.onclick = ()=>loadPropForm(p.id);
+    box.appendChild(c);
+  });
+  const n = document.createElement('button');
+  n.className = 'chip new-chip' + (editingProp===null ? ' active' : '');
+  n.textContent = '+ عقار جديد';
+  n.onclick = ()=>loadPropForm(null);
+  box.appendChild(n);
+}
+function loadPropForm(id){
+  const op = currentOp();
+  editingProp = id || null;
+  const p = id ? op.props.find(x=>x.id===id) : null;
+  document.getElementById('pf-number').value = p ? p.number : '';
+  document.getElementById('pf-type').value = p ? p.type : PROP_TYPES[0];
+  document.getElementById('pf-purpose').value = p ? p.purpose : PROP_PURPOSES[0];
+  document.getElementById('pf-deed').value = p ? p.deed : '';
+  document.getElementById('pf-city').value = p ? p.city : '';
+  document.getElementById('pf-area').value = p ? p.area : '';
+  document.getElementById('pf-cno').value = p ? p.cno : '';
+  document.getElementById('pf-ctype').value = p ? p.ctype : CONTRACT_TYPES[0];
+  document.getElementById('pf-other').value = p ? p.other : '';
+  document.getElementById('pf-notes').value = p ? p.notes : '';
+  document.getElementById('pf-del').style.display = p ? '' : 'none';
+  document.getElementById('pf-msg').textContent = '';
+
+  const box = document.getElementById('pf-parties');
+  box.innerHTML = '';
+  if(!company.parties.length){
+    const h = document.createElement('div');
+    h.className = 'hint';
+    h.textContent = 'ما فيه أطراف ثابتة. أضيفيهم من قسم «الأطراف المعنية الثابتة» أعلى الصفحة ليظهروا هنا.';
+    box.appendChild(h);
+  }
+  const chosen = new Set(p ? (p.parties || []) : []);
+  company.parties.forEach(pt=>{
+    const lab = document.createElement('label'); lab.className = 'chk';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = pt.id; cb.checked = chosen.has(pt.id);
+    const tx = document.createElement('span'); tx.textContent = pt.name + ' (' + pt.type + ')';
+    lab.append(cb,tx);
+    box.appendChild(lab);
+  });
+  renderPropList();
+}
+function saveProp(){
+  const op = currentOp();
+  const number = document.getElementById('pf-number').value.trim();
+  if(!number){ alert('اكتبي رقم العقار'); return; }
+  const rec = {
+    id: editingProp || uid(),
+    number,
+    type: document.getElementById('pf-type').value,
+    purpose: document.getElementById('pf-purpose').value,
+    deed: document.getElementById('pf-deed').value.trim(),
+    city: document.getElementById('pf-city').value.trim(),
+    area: document.getElementById('pf-area').value.trim(),
+    cno: document.getElementById('pf-cno').value.trim(),
+    ctype: document.getElementById('pf-ctype').value,
+    parties: [...document.querySelectorAll('#pf-parties input:checked')].map(cb=>cb.value),
+    other: document.getElementById('pf-other').value.trim(),
+    notes: document.getElementById('pf-notes').value.trim()
+  };
+  const idx = op.props.findIndex(x=>x.id===rec.id);
+  if(idx>=0) op.props[idx] = rec; else op.props.push(rec);
+  editingProp = rec.id;
+
+  const b = op.boxes.property || {text:'', status:'new'};
+  if(b.status==='new') b.status = 'progress';
+  b.updated = Date.now();
+  op.boxes.property = b;
+  if(op.status==='new') op.status = 'progress';
+
+  persist(); render();
+  document.getElementById('prop-status').value = b.status;
+  renderPropList();
+  document.getElementById('pf-del').style.display = '';
+  const msg = document.getElementById('pf-msg');
+  msg.textContent = 'تم الحفظ';
+  setTimeout(()=>{ msg.textContent = ''; },2000);
+}
+function deleteProp(){
+  if(!editingProp) return;
+  if(!confirm('حذف هذا العقار من العملية؟')) return;
+  const op = currentOp();
+  op.props = op.props.filter(x=>x.id!==editingProp);
+  persist(); render();
+  loadPropForm(op.props.length ? op.props[0].id : null);
+}
+function changePropStatus(val){
+  const op = currentOp();
+  const b = op.boxes.property || {text:''};
+  b.status = val; b.updated = Date.now();
+  op.boxes.property = b;
+  persist(); render();
+}
+
+/* ---------- نص التقرير (مشترك) ---------- */
 function orgText(){
   const ids = new Set(company.org.map(n=>n.id));
   const lines = [];
@@ -841,9 +1268,36 @@ function orgText(){
   walk(null,0);
   return lines.join('\n');
 }
+function propText(op){
+  if(!op.props.length) return '—';
+  return op.props.map(p=>{
+    const names = (p.parties||[]).map(id=>company.parties.find(x=>x.id===id)).filter(Boolean).map(x=>x.name);
+    if(p.other) names.push(p.other);
+    let t = `• عقار رقم ${p.number} — ${p.type} (${p.purpose})`;
+    if(p.deed) t += `\n  الصك: ${p.deed}`;
+    if(p.city) t += `\n  الموقع: ${p.city}`;
+    if(p.area) t += `\n  المساحة: ${p.area} م²`;
+    if(p.cno || (p.ctype && p.ctype!==CONTRACT_TYPES[0])){
+      t += `\n  العقد: ${p.cno || '—'}${p.ctype && p.ctype!==CONTRACT_TYPES[0] ? ' (' + p.ctype + ')' : ''}`;
+    }
+    if(names.length) t += `\n  الأطراف: ${names.join('، ')}`;
+    if(p.notes) t += `\n  ملاحظات: ${p.notes}`;
+    return t;
+  }).join('\n');
+}
+function compText(op, k){
+  const d = op.boxes[k];
+  const c = CMAP[k];
+  const body = k==='property' ? propText(op) : (d && d.text ? d.text : '—');
+  return `${c.e} ${c.t} [${BOX_STATUS[d ? d.status : 'new']}]\n${body}`;
+}
+
+/* ---------- التقرير الكامل ---------- */
 function buildReport(){
   const op = currentOp();
-  let r = `📋 تقرير العملية ${op.id}\nالحالة: ${OP_STATUS[op.status]}\nبدأت: ${fmtDate(op.start)}\n━━━━━━━━━━\n`;
+  let r = `📋 تقرير العملية ${op.id}\n`;
+  if(op.name) r += `الاسم: ${op.name}\n`;
+  r += `الحالة: ${OP_STATUS[op.status]}\nبدأت: ${fmtDate(op.start)}\n━━━━━━━━━━\n`;
   r += `\n🏢 الهيكل التنظيمي:\n${orgText()}\n`;
   if(company.parties.length){
     r += `\n🤝 الأطراف الثابتة:\n`;
@@ -852,28 +1306,179 @@ function buildReport(){
   r += `\n━━━━━━━━━━\n\n✔️ المعايير (${op.criteria.length - unmetCount(op)}/${op.criteria.length}):\n`;
   op.criteria.forEach(c=>{ r += `${c.checked ? '☑' : '☐'} ${c.text}\n`; });
   r += '\n━━━━━━━━━━\n';
-  BOXES.forEach((b,i)=>{
-    const d = op.boxes[i+1];
-    r += `\n${b.e} ${i+1}. ${b.t} [${BOX_STATUS[d ? d.status : 'new']}]\n${d && d.text ? d.text : '—'}\n`;
+  op.comps.forEach((k,i)=>{
+    const c = CMAP[k];
+    const d = op.boxes[k];
+    r += `\n${c.e} ${i+1}. ${c.t} [${BOX_STATUS[d ? d.status : 'new']}]\n`;
+    r += (k==='property' ? propText(op) : (d && d.text ? d.text : '—')) + '\n';
   });
   return r;
 }
-function copyReport(){
-  const text = buildReport();
+function copyText(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>alert('تم نسخ التقرير')).catch(()=>fallbackCopy(text));
+    navigator.clipboard.writeText(text).then(()=>alert('تم النسخ')).catch(()=>fallbackCopy(text));
   }else fallbackCopy(text);
 }
 function fallbackCopy(text){
   const ta = document.createElement('textarea');
   ta.value = text; document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy'); alert('تم نسخ التقرير'); }
+  try{ document.execCommand('copy'); alert('تم النسخ'); }
   catch(e){ alert('تعذّر النسخ، انسخي يدويًا'); }
   ta.remove();
 }
+function copyReport(){ copyText(buildReport()); }
 function shareWhatsApp(){
   window.open('https://wa.me/?text=' + encodeURIComponent(buildReport()),'_blank');
 }
+
+/* ---------- إرسال الملخص ---------- */
+function getSum(op){
+  if(!op.sum || typeof op.sum !== 'object') op.sum = {comps:[...op.comps], extras:{}};
+  if(!Array.isArray(op.sum.comps)) op.sum.comps = [...op.comps];
+  if(!op.sum.extras) op.sum.extras = {};
+  SUM_EXTRAS.forEach(x=>{
+    if(typeof op.sum.extras[x.k] !== 'boolean') op.sum.extras[x.k] = x.def;
+  });
+  // تجاهل المكونات المخفية من العملية
+  op.sum.comps = op.sum.comps.filter(k=>op.comps.includes(k));
+  return op.sum;
+}
+
+function buildSummary(op, s){
+  const parts = [];
+  if(s.extras.head){
+    let h = `📋 ملخص العملية ${op.id}`;
+    if(op.name) h += `\nالاسم: ${op.name}`;
+    h += `\nالحالة: ${OP_STATUS[op.status]}`;
+    h += `\nبدأت: ${fmtDate(op.start)}`;
+    parts.push(h);
+  }
+  if(s.extras.org){
+    parts.push(`🏢 الهيكل التنظيمي:\n${orgText()}`);
+  }
+  if(s.extras.parties && company.parties.length){
+    parts.push('🤝 الأطراف الثابتة:\n' + company.parties.map(p=>
+      `• ${p.name} (${p.type})${p.phone ? ' — ' + p.phone : ''}`).join('\n'));
+  }
+  if(s.extras.criteria){
+    const met = op.criteria.length - unmetCount(op);
+    parts.push(`✔️ المعايير (${met}/${op.criteria.length}):\n` +
+      (op.criteria.length ? op.criteria.map(c=>`${c.checked ? '☑' : '☐'} ${c.text}`).join('\n') : '—'));
+  }
+  op.comps.filter(k=>s.comps.includes(k)).forEach(k=>{
+    parts.push(compText(op,k));
+  });
+  return parts.join('\n\n━━━━━━━━━━\n\n');
+}
+
+function openSum(){
+  const op = currentOp();
+  const s = getSum(op);
+
+  const g = document.getElementById('sum-comps');
+  g.innerHTML = '';
+  op.comps.forEach(k=>{
+    const c = CMAP[k];
+    const lab = document.createElement('label'); lab.className = 'pick-item';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.value = k; cb.checked = s.comps.includes(k);
+    cb.onchange = onSumChange;
+    const ic = document.createElement('span'); ic.innerHTML = ico(c.i,20);
+    const tx = document.createElement('span'); tx.textContent = c.t;
+    lab.append(cb,ic,tx);
+    g.appendChild(lab);
+  });
+
+  const ex = document.getElementById('sum-extras');
+  ex.innerHTML = '';
+  SUM_EXTRAS.forEach(x=>{
+    const lab = document.createElement('label'); lab.className = 'chk';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.dataset.extra = x.k; cb.checked = s.extras[x.k];
+    cb.onchange = onSumChange;
+    const tx = document.createElement('span'); tx.textContent = x.t;
+    lab.append(cb,tx);
+    ex.appendChild(lab);
+  });
+
+  const sel = document.getElementById('sum-contact');
+  sel.innerHTML = '';
+  const o0 = document.createElement('option');
+  o0.value = ''; o0.textContent = '— أختار الشخص من واتساب —';
+  sel.appendChild(o0);
+  company.parties.filter(p=>p.phone).forEach(p=>{
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.name + ' (' + p.type + ')';
+    sel.appendChild(o);
+  });
+
+  document.getElementById('sum-share').style.display = navigator.share ? '' : 'none';
+  refreshSum();
+  document.getElementById('sumModal').classList.add('open');
+}
+function closeSum(){ document.getElementById('sumModal').classList.remove('open'); }
+
+function onSumChange(){
+  const op = currentOp();
+  const s = getSum(op);
+  s.comps = [...document.querySelectorAll('#sum-comps input:checked')].map(cb=>cb.value);
+  document.querySelectorAll('#sum-extras input').forEach(cb=>{ s.extras[cb.dataset.extra] = cb.checked; });
+  persist(); refreshSum();
+}
+function sumAll(v){
+  document.querySelectorAll('#sum-comps input').forEach(cb=>cb.checked = v);
+  onSumChange();
+}
+function refreshSum(){
+  const op = currentOp();
+  document.getElementById('sum-text').value = buildSummary(op, getSum(op));
+}
+function sumText(){
+  const t = document.getElementById('sum-text').value.trim();
+  if(!t){ alert('الملخص فاضي. اختاري مكوّنًا أو معلومة تنكتب فيه.'); return ''; }
+  return t;
+}
+// يحوّل 05xxxxxxxx إلى 9665xxxxxxxx (أرقام سعودية)
+function normPhone(p){
+  let d = (p || '').replace(/[^\d]/g,'');
+  if(d.startsWith('00')) d = d.slice(2);
+  else if(d.startsWith('0')) d = '966' + d.slice(1);
+  return d;
+}
+function sendSumWhatsApp(){
+  const t = sumText(); if(!t) return;
+  let url = 'https://wa.me/';
+  const id = document.getElementById('sum-contact').value;
+  if(id){
+    const p = company.parties.find(x=>x.id===id);
+    const ph = normPhone(p && p.phone);
+    if(ph) url += ph;
+  }
+  window.open(url + '?text=' + encodeURIComponent(t),'_blank');
+}
+function sendSumMail(){
+  const t = sumText(); if(!t) return;
+  const op = currentOp();
+  window.location.href = 'mailto:?subject=' + encodeURIComponent('ملخص العملية ' + op.id) +
+    '&body=' + encodeURIComponent(t);
+}
+function copySum(){
+  const t = sumText(); if(!t) return;
+  copyText(t);
+}
+function shareSum(){
+  const t = sumText(); if(!t) return;
+  const op = currentOp();
+  if(navigator.share){
+    navigator.share({title:'ملخص العملية ' + op.id, text:t}).catch(()=>{});
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal(); closeOrgModal(); closePartyModal(); closePropModal(); closePick(); closeSum();
+  }
+});
 
 /* ---------- التشغيل ---------- */
 hydrateIcons();
